@@ -12,18 +12,31 @@ import java.util.Scanner;
 public class Product {
 
    private String name;
+
    private BigInteger id;
+
    private Float price;
+
    private BigInteger amount;
 
-  public Integer buy(BigInteger amount){
-     if(this.amount.compareTo(amount) < 0){
-        return -1;
-     }
-     this.amount = this.amount.subtract(amount);
-     return 1;
 
+    /**
+     * sell product if it's possible
+     * @param amount of removing product
+     *
+     */
+  public void sell(BigInteger amount){
+     if(this.amount.compareTo(amount) >= 0){
+         this.amount = this.amount.subtract(amount);
+     }
+     else System.out.println("Product cannot be sold");
   }
+
+
+    /**
+     * Scan product form stdout
+     * @return Scanned product
+     */
   public static Product scanProduct (){
       Scanner scanner = new Scanner(System.in);
       System.out.println("Enter new product name:");

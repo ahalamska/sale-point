@@ -1,9 +1,11 @@
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class Wallet {
 
-    private  Wallet instance = null;
+    private  static Wallet instance = null;
 
     private Integer amountCash;
 
@@ -12,7 +14,7 @@ public class Wallet {
     private Integer soldToday;
 
 
-    public   Wallet getInstance(){
+    public static  Wallet getInstance(){
         if(instance == null)
             return instance = new Wallet();
         return instance;
@@ -32,4 +34,9 @@ public class Wallet {
     }
 
 
+    public void sellByCard(BigDecimal toPay) {
+    }
+
+    public void sellByCash(BigDecimal toPay) {
+    }
 }
