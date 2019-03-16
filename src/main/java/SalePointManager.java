@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class SalePointMenager {
+public class SalePointManager {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args){
@@ -20,14 +20,14 @@ public class SalePointMenager {
             int answer = scanner.nextInt();
             switch(answer){
                 case 1:
-                    Selling selling = new Selling();
-                    selling.start();
+                    SaleManager saleManager = new SaleManager();
+                    saleManager.start();
                 break;
 
                 case 2 : System.out.println(wallet.toString());
                 break;
 
-                case 3 : ProductMenager.instanceOf().addProduct();
+                case 3 : ProductManager.getInstance().addProduct();
                 break;
 
                 default : System.out.println("wrong ans!");

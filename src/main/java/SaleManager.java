@@ -1,25 +1,24 @@
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
 @NoArgsConstructor
-public class Selling {
+public class SaleManager {
 
     private BigDecimal toPay;
-    private Map<Product, BigInteger> boughtProducts;
+    private Map<Long, BigInteger> boughtProducts;
 
     /**
      * initialise selling
      */
     public void start() {
         toPay = new BigDecimal("0");
-        boughtProducts = new HashMap<Product, BigInteger>();
+        boughtProducts = new HashMap<Long, BigInteger>();
         sellingLoop();
     }
 
@@ -66,10 +65,15 @@ public class Selling {
      * Update amount in bought products database
      */
     private void updateAmount(Product product, BigInteger amount){
-        BigInteger newAmount = boughtProducts.get(product).add(amount);
-        boughtProducts.remove(product);
-        boughtProducts.put(product,newAmount);
+        if(boughtProducts.containsKey(product.getId())){
+            boughtProducts.merge(product.getId(),amount, BigInteger::add);
+        }
+        else{
+            boughtProducts.put(product.getId(), amount);
+        }
+
     }
+
 
     /**
      * Scan product by Id (bar code) and send request to Database to sell Product
@@ -78,16 +82,16 @@ public class Selling {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Scan ID :");
-        BigInteger id = scanner.nextBigInteger();
+        Long id = scanner.nextLong();
         System.out.println("Enter amount :");
         BigInteger amount = scanner.nextBigInteger();
 
-        Product product = ProductMenager.instanceOf().sellingDecider(id, amount);
-        if(product != null){
-            if(boughtProducts.containsKey(product)){
-                updateAmount(product, amount);
-            }
-            boughtProducts.put(product, amount);
-        }
+        Optional<Product> optionalProduct = ProductManager.getInstance().SellingDeciding(id, amount);
+
+        optionalProduct.ifPresent(product -> {
+            updateAmount(product,amount);
+            BigDecimal cost = (product.getPrice().multiply(new BigDecimal(amount)));
+            toPay = toPay.add(cost);
+            });
     }
 }
