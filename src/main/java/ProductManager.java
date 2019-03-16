@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class ProductManager {
 
-    private  Map<Long, Product> productMap = new HashMap<Long, Product>();
+    private  Map<Long, Product> productMap = new HashMap<>();
 
     private static ProductManager instance = null;
 
@@ -30,6 +30,8 @@ public class ProductManager {
     public void addProduct()
     {
         Product product = Product.scanProduct();
+
+
         if(productMap.containsKey(product.getId())) {
             System.out.println("Already exists product with this id");
             return;
@@ -37,11 +39,7 @@ public class ProductManager {
         productMap.put(product.getId(), product);
     }
 
-    /**
-     *
-     * @param soldProduct product we sell
-     * @param amount of product that we want to remove
-     */
+
     private void sellProduct(Product soldProduct, BigInteger amount){
         if(soldProduct.getAmount().compareTo(amount) >= 0){
             soldProduct.setAmount(soldProduct.getAmount().subtract(amount));
@@ -51,22 +49,14 @@ public class ProductManager {
 
     }
 
-    /**
-     *
-     * @param  id of searched product
-     * @return Product if found, null if not found
-     */
+
     private Optional<Product> search(Long id){
         return Optional.ofNullable(productMap.get(id));
     }
 
 
 
-    /**
-     * decides if it's able to sell product
-     * @param id - id of product we want to sell
-     * @param amount - amount of product we want to sell
-     */
+
     public Optional<Product> SellingDeciding(Long id, BigInteger amount){
         Optional<Product> optionalProduct = search(id);
 

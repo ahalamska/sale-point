@@ -10,21 +10,26 @@ import java.util.Scanner;
 @NoArgsConstructor
 public class SaleManager {
 
-    private BigDecimal toPay;
-    private Map<Long, BigInteger> boughtProducts;
+    private BigDecimal toPay = new BigDecimal(0);
+    private Map<Long, BigInteger> boughtProducts= new HashMap<>();  ;
 
-    /**
-     * initialise selling
-     */
+
     public void start() {
         toPay = new BigDecimal("0");
-        boughtProducts = new HashMap<Long, BigInteger>();
+        boughtProducts = new HashMap<>();
         sellingLoop();
     }
+    private void updateAmount(Product product, BigInteger amount){
+        if(boughtProducts.containsKey(product.getId())){
+            boughtProducts.merge(product.getId(),amount, BigInteger::add);
+        }
+        else{
+            boughtProducts.put(product.getId(), amount);
+        }
 
-    /**
-     * Main selling loop : asking if end selling or continue
-     */
+    }
+
+
     @SuppressWarnings("InfiniteLoopStatement")
     private void sellingLoop(){
         Scanner scanner = new Scanner(System.in);
@@ -61,18 +66,7 @@ public class SaleManager {
         }
     }
 
-    /**
-     * Update amount in bought products database
-     */
-    private void updateAmount(Product product, BigInteger amount){
-        if(boughtProducts.containsKey(product.getId())){
-            boughtProducts.merge(product.getId(),amount, BigInteger::add);
-        }
-        else{
-            boughtProducts.put(product.getId(), amount);
-        }
 
-    }
 
 
     /**

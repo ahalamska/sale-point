@@ -7,11 +7,11 @@ public class Wallet {
 
     private  static Wallet instance = null;
 
-    private Integer amountCash;
+    private BigDecimal amountCash = new BigDecimal(0);
 
-    private Integer amountCard;
+    private BigDecimal amountCard = new BigDecimal(0);
 
-    private Integer soldToday;
+    private BigDecimal soldToday = new BigDecimal(0);
 
 
     public static  Wallet getInstance(){
@@ -22,15 +22,9 @@ public class Wallet {
 
     public String toString() {
 
-        return " Amount Cash : " + Integer.toString(this.amountCash) +
-                "\nAmount Card : " + Integer.toString(this.amountCard) +
-                "\nSold Today : " + Integer.toString(this.amountCard) ;
-    }
-
-    public Wallet(){
-        this.amountCard = 0;
-        this.amountCash = 0;
-        this.soldToday = 0;
+        return " Amount Cash : " +  this.amountCash.toString() +
+                "\nAmount Card : " + this.amountCard.toString() +
+                "\nSold Today : " + this.soldToday.toString() ;
     }
 
 

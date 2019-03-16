@@ -9,6 +9,8 @@ public class SalePointManager {
 
         Wallet wallet = new Wallet();
 
+        SaleManager saleManager = new SaleManager();
+
         while(true){
             System.out.println("\n-------------------------------\n" +
                     "\n Welcome in main menu ! " +
@@ -16,11 +18,12 @@ public class SalePointManager {
                     "\n 1. Start selling" +
                     "\n 2. Info about current state " +
                     "\n 3. Add product " +
+                    "\n 4. exit " +
                     "\n-------------------------------\n");
             int answer = scanner.nextInt();
             switch(answer){
                 case 1:
-                    SaleManager saleManager = new SaleManager();
+
                     saleManager.start();
                 break;
 
@@ -29,6 +32,8 @@ public class SalePointManager {
 
                 case 3 : ProductManager.getInstance().addProduct();
                 break;
+
+                case 4: return;
 
                 default : System.out.println("wrong ans!");
             }

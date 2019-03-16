@@ -18,14 +18,12 @@ public class Product {
 
    private BigDecimal price;
 
+   //TODO create new AmountManager class and add there amount-counting functionality
    private BigInteger amount;
 
 
 
-    /**
-     * Scan product form stdout
-     * @return Scanned product
-     */
+
   public static Product scanProduct (){
       Scanner scanner = new Scanner(System.in);
       System.out.println("Enter new product name:");
@@ -34,11 +32,12 @@ public class Product {
       System.out.println("Enter new product price:");
       BigDecimal price = scanner.nextBigDecimal();
 
+      System.out.println("Enter new product Id:");
+      Long id = scanner.nextLong();
+
       System.out.println("Enter new product amount:");
       BigInteger amount = scanner.nextBigInteger();
 
-      System.out.println("Enter new product Id:");
-      Long id = scanner.nextLong();
 
       return new Product(name, id, price, amount);
 
