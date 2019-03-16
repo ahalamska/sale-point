@@ -23,9 +23,13 @@ public class ProductMenager {
         return  instance;
     }
 
-    public void addProduct(Product product){
+    public void addProduct()
+    {
+        Product product = Product.scanProduct();
         productMap.put(product.getId(), product);
     }
+
+    
 
 }
 

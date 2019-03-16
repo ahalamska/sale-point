@@ -3,6 +3,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import java.math.BigInteger;
+import java.util.Scanner;
 
 @Data
 @AllArgsConstructor
@@ -23,7 +24,21 @@ public class Product {
      return 1;
 
   }
-  public Product (){
-      System.out.println("P");
+  public static Product scanProduct (){
+      Scanner scanner = new Scanner(System.in);
+      System.out.println("Enter new product name:");
+      String name = scanner.next();
+
+      System.out.println("Enter new product price:");
+      Float price = scanner.nextFloat();
+
+      System.out.println("Enter new product amount:");
+      BigInteger amount = scanner.nextBigInteger();
+
+      System.out.println("Enter new product Id:");
+      BigInteger id = scanner.nextBigInteger();
+
+      return new Product(name, id, price, amount);
+
   }
 }
