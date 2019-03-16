@@ -11,6 +11,7 @@ public class SalePointManager {
 
         SaleManager saleManager = new SaleManager();
 
+
         while(true){
             System.out.println("\n-------------------------------\n" +
                     "\n Welcome in main menu ! " +
@@ -30,7 +31,7 @@ public class SalePointManager {
                 case 2 : System.out.println(wallet.toString());
                 break;
 
-                case 3 : ProductManager.getInstance().addProduct();
+                case 3 : ProductManager.getInstance().enteringProduct();
                 break;
 
                 case 4: return;

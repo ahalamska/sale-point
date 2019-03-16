@@ -4,7 +4,10 @@ import lombok.Data;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.InputMismatchException;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 @Data
 @AllArgsConstructor
@@ -24,22 +27,5 @@ public class Product {
 
 
 
-  public static Product scanProduct (){
-      Scanner scanner = new Scanner(System.in);
-      System.out.println("Enter new product name:");
-      String name = scanner.next();
 
-      System.out.println("Enter new product price:");
-      BigDecimal price = scanner.nextBigDecimal();
-
-      System.out.println("Enter new product Id:");
-      Long id = scanner.nextLong();
-
-      System.out.println("Enter new product amount:");
-      BigInteger amount = scanner.nextBigInteger();
-
-
-      return new Product(name, id, price, amount);
-
-  }
 }

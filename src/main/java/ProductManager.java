@@ -2,10 +2,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -24,14 +23,9 @@ public class ProductManager {
         return  instance;
     }
 
-    /**
-     * Scan and add product to Database
-     */
-    public void addProduct()
+
+    public void addProduct(Product product)
     {
-        Product product = Product.scanProduct();
-
-
         if(productMap.containsKey(product.getId())) {
             System.out.println("Already exists product with this id");
             return;
@@ -66,6 +60,50 @@ public class ProductManager {
         return optionalProduct;
 
 
+    }
+
+    public void enteringProduct(){
+
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter new product name:");
+        String name = scanner.nextLine();
+
+
+        BigDecimal price;
+        System.out.println("Enter new product price:");
+        try {
+            price = scanner.nextBigDecimal();
+        }
+        catch (InputMismatchException e){
+            System.out.println("Wrong price: Maybe '.' instead ',' ");
+            return;
+        }
+
+        scanner = new Scanner(System.in);
+        System.out.println("Enter new product Id:");
+        String stringId = scanner.nextLine();
+        Long id;
+        if(stringId.matches("[0-9]{13}")){
+            id = Long.getLong(stringId);
+        }
+        else {
+            System.out.println("Wrong Id : Required 13 digit with no white sign");
+            return;
+        }
+
+
+        System.out.println("Enter new product amount:");
+        BigInteger amount;
+        try {
+            amount = scanner.nextBigInteger();
+        }
+        catch (InputMismatchException e){
+            System.out.println("Wrong amount. Required Integer");
+            return;
+        }
+
+         addProduct(new Product(name, id, price, amount));
     }
 
 
