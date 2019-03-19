@@ -1,13 +1,9 @@
-import lombok.Data;
-
 import java.math.BigDecimal;
 
-@Data
+
 public class Wallet {
 
     private  static Wallet instance = null;
-
-    private BigDecimal amountCash = new BigDecimal(0);
 
     private BigDecimal amountCard = new BigDecimal(0);
 
@@ -20,17 +16,22 @@ public class Wallet {
         return instance;
     }
 
+
     public String toString() {
 
-        return " Amount Cash : " +  this.amountCash.toString() +
+        return " Amount Cash : " +  (this.soldToday.subtract(amountCard)).toString() +
                 "\nAmount Card : " + this.amountCard.toString() +
                 "\nSold Today : " + this.soldToday.toString() ;
     }
 
 
-    public void sellByCard(BigDecimal toPay) {
+    void sellByCard(BigDecimal toPay) {
+        this.soldToday = this.soldToday.add(toPay);
+        System.out.println("Sold" + soldToday);
+        this.amountCard = this.amountCard.add(toPay);
     }
 
-    public void sellByCash(BigDecimal toPay) {
+    void sellByCash(BigDecimal toPay) {
+        this.soldToday = this.soldToday.add(toPay);
     }
 }

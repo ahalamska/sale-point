@@ -1,11 +1,13 @@
 import lombok.NoArgsConstructor;
 
+import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static java.sql.Types.NULL;
 
 @NoArgsConstructor
 public class SaleManager {
@@ -19,6 +21,8 @@ public class SaleManager {
         boughtProducts = new HashMap<>();
         sellingLoop();
     }
+
+
     private void updateAmount(Product product, BigInteger amount){
         if(boughtProducts.containsKey(product.getId())){
             boughtProducts.merge(product.getId(),amount, BigInteger::add);
@@ -26,7 +30,6 @@ public class SaleManager {
         else{
             boughtProducts.put(product.getId(), amount);
         }
-
     }
 
 
@@ -34,14 +37,28 @@ public class SaleManager {
     private void sellingLoop(){
         Scanner scanner = new Scanner(System.in);
         while(true){
-            System.out.println("More product ? (y/n)");
-            String answer = scanner.next();
-            if (answer.equals("y")){
-                nextProduct();
+            System.out.println("More product ? (y/n) \n exit(e)");
+            String answer;
+            try {
+                answer = scanner.nextLine();
             }
-            else {
-                endSelling();
-                return;
+            catch (InputMismatchException e){
+                System.out.println("Wrong answer !");
+                scanner = new Scanner(System.in);
+                continue;
+            }
+            switch (answer) {
+                case "y":
+                    nextProduct();
+                    break;
+                case "n":
+                    endSelling();
+                    return;
+                case "e":
+                    return;
+                default:
+                    System.out.println("Wrong answer !");
+                    break;
             }
         }
     }
@@ -53,20 +70,57 @@ public class SaleManager {
     private void endSelling() {
         Scanner scanner = new Scanner(System.in);
         while(true) {
-            System.out.println("To pay : " + toPay.toString() + "\n" + "Pay by Card (y/n) + \n");
-            String answer = scanner.next();
-            if (answer.equals("y")) {
-                Wallet.getInstance().sellByCard(toPay);
-                return;
-            } else if (answer.equals("n")) {
-                Wallet.getInstance().sellByCash(toPay);
-                return;
+            System.out.println("To pay : " + toPay.toString() + "\n" + "Pay by Card (y/n)?\n exit (e) + \n");
+            String answer;
+            try {
+                answer = scanner.nextLine();
             }
-            else System.out.println("Wrong answer!");
+            catch (InputMismatchException e){
+                System.out.println("Wrong answer !");
+                scanner = new Scanner(System.in);
+                continue;
+            }
+            switch (answer) {
+                case "y":
+                    Wallet.getInstance().sellByCard(toPay);
+                    printReceipt();
+                    return;
+                case "n":
+                    Wallet.getInstance().sellByCash(toPay);
+                    printReceipt();
+                    return;
+                case "e":
+                    return;
+                default:
+                    System.out.println("Wrong answer!");
+                    return;
+            }
         }
+
     }
 
+    private void printReceipt() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        System.out.println("No-name\n" +
+                "everything you want\n" +
+                "ul.BestInternship 20/48\n" +
+                "https://www.linkedin.com/in/alicja-halamska-965875166/\n" +
+                dateFormat.format(date)+
+                "-----------------------------------------28657\n" +
+                "Paragon Fiskalny\n" );
+        for(Map.Entry<Long,BigInteger> entry : boughtProducts.entrySet()){
+            Optional<Product> optionalProduct = ProductManager.getInstance().search(entry.getKey());
+            optionalProduct.ifPresent(product -> {
+                System.out.println(product.getName() + "     " +
+                        entry.getValue().toString() + "szt. x" +
+                        product.getPrice().toString() + "\n");
+            });
+        }
+        System.out.println("-------------------------------\n"+
+                "SUMA PLN    " + this.toPay);
 
+    }
 
 
     /**
@@ -75,17 +129,41 @@ public class SaleManager {
     private void nextProduct() {
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Scan ID :");
-        Long id = scanner.nextLong();
+
+        System.out.println("Scan bar-code :");
+        String stringId;
+        try {
+            stringId = scanner.next();
+        }
+        catch(InputMismatchException e){
+            System.out.println("Wrong ID scanned, try again");
+            return;
+        }
+        Long id;
+        if(!Product.isBarCodeCorrect(stringId)) return;
+        id = Long.parseLong(stringId);
+
+
         System.out.println("Enter amount :");
-        BigInteger amount = scanner.nextBigInteger();
+        BigInteger amount;
+        try {
+            amount = scanner.nextBigInteger();
+        }
+        catch (InputMismatchException e){
+            System.out.println("Wrong amount scanned, try again");
+            return;
+        }
 
-        Optional<Product> optionalProduct = ProductManager.getInstance().SellingDeciding(id, amount);
+        Optional<Product> optionalProduct = ProductManager.getInstance().search(id);
 
-        optionalProduct.ifPresent(product -> {
+        optionalProduct.ifPresentOrElse(product -> {
+            if(ProductManager.getInstance().sellProduct(product, amount)){
             updateAmount(product,amount);
             BigDecimal cost = (product.getPrice().multiply(new BigDecimal(amount)));
             toPay = toPay.add(cost);
-            });
+            }}
+            ,() -> System.out.println("Product not found : Product with this ID doesn't exist"));
+
+
     }
 }

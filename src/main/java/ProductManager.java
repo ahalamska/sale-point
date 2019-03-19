@@ -24,8 +24,7 @@ public class ProductManager {
     }
 
 
-    public void addProduct(Product product)
-    {
+    private void addProduct(Product product) {
         if(productMap.containsKey(product.getId())) {
             System.out.println("Already exists product with this id");
             return;
@@ -34,38 +33,29 @@ public class ProductManager {
     }
 
 
-    private void sellProduct(Product soldProduct, BigInteger amount){
+    public boolean sellProduct(Product soldProduct, BigInteger amount){
         if(soldProduct.getAmount().compareTo(amount) >= 0){
             soldProduct.setAmount(soldProduct.getAmount().subtract(amount));
+            System.out.println(soldProduct.getName() + " in amount of " + amount.toString() + " is sold");
+            return true;
         }
         else System.out.println("Not enough product of name : " + soldProduct.getName() + " \n " +
                 "Available only : " + soldProduct.getAmount());
-
+        return false;
     }
 
 
-    private Optional<Product> search(Long id){
+    public Optional<Product> search(Long id){
         return Optional.ofNullable(productMap.get(id));
     }
 
 
 
-
-    public Optional<Product> SellingDeciding(Long id, BigInteger amount){
-        Optional<Product> optionalProduct = search(id);
-
-        optionalProduct.ifPresentOrElse(product -> sellProduct(product, amount), ()
-                -> System.out.println("Impossible to sell ! : Product with this ID doesn't exist"));
-
-        return optionalProduct;
-
-
-    }
-
     public void enteringProduct(){
 
 
         Scanner scanner = new Scanner(System.in);
+
         System.out.println("Enter new product name:");
         String name = scanner.nextLine();
 
@@ -80,17 +70,19 @@ public class ProductManager {
             return;
         }
 
-        scanner = new Scanner(System.in);
-        System.out.println("Enter new product Id:");
-        String stringId = scanner.nextLine();
-        Long id;
-        if(stringId.matches("[0-9]{13}")){
-            id = Long.getLong(stringId);
+
+        System.out.println("Enter new product bar-code:");
+        String stringId;
+        try {
+            stringId = scanner.next();
         }
-        else {
-            System.out.println("Wrong Id : Required 13 digit with no white sign");
+        catch (InputMismatchException e){
+            System.out.println("Invalid bar-code");
             return;
         }
+        Long id;
+        if(!Product.isBarCodeCorrect(stringId)) return;
+        id = Long.parseLong(stringId);
 
 
         System.out.println("Enter new product amount:");
