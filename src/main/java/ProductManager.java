@@ -24,7 +24,8 @@ public class ProductManager {
     }
 
 
-    private void addProduct(Product product) {
+    public void addProduct(Product product) {
+        if(!Product.isBarCodeCorrect(product.getId().toString())) return;
         if(productMap.containsKey(product.getId())) {
             System.out.println("Already exists product with this id");
             return;
@@ -33,15 +34,19 @@ public class ProductManager {
     }
 
 
-    public boolean sellProduct(Product soldProduct, BigInteger amount){
+    public boolean isAvailable(Product soldProduct, BigInteger amount){
         if(soldProduct.getAmount().compareTo(amount) >= 0){
-            soldProduct.setAmount(soldProduct.getAmount().subtract(amount));
-            System.out.println(soldProduct.getName() + " in amount of " + amount.toString() + " is sold");
+            subtractAmount(soldProduct, amount);
             return true;
         }
         else System.out.println("Not enough product of name : " + soldProduct.getName() + " \n " +
                 "Available only : " + soldProduct.getAmount());
         return false;
+    }
+
+    public void subtractAmount(Product soldProduct, BigInteger amount){
+        soldProduct.setAmount(soldProduct.getAmount().subtract(amount));
+        System.out.println(soldProduct.getName() + " in amount of " + amount.toString() + " is added to receipt");
     }
 
 
@@ -81,7 +86,7 @@ public class ProductManager {
             return;
         }
         Long id;
-        if(!Product.isBarCodeCorrect(stringId)) return;
+
         id = Long.parseLong(stringId);
 
 

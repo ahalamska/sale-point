@@ -1,15 +1,14 @@
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static java.sql.Types.NULL;
-
 @NoArgsConstructor
+@Getter
 public class SaleManager {
 
     private BigDecimal toPay = new BigDecimal(0);
@@ -23,7 +22,7 @@ public class SaleManager {
     }
 
 
-    private void updateAmount(Product product, BigInteger amount){
+    public void updateAmount(Product product, BigInteger amount){
         if(boughtProducts.containsKey(product.getId())){
             boughtProducts.merge(product.getId(),amount, BigInteger::add);
         }
@@ -49,7 +48,7 @@ public class SaleManager {
             }
             switch (answer) {
                 case "y":
-                    nextProduct();
+                    scanNextProduct();
                     break;
                 case "n":
                     endSelling();
@@ -126,7 +125,7 @@ public class SaleManager {
     /**
      * Scan product by Id (bar code) and send request to Database to sell Product
      */
-    private void nextProduct() {
+    private void scanNextProduct() {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -153,17 +152,20 @@ public class SaleManager {
             System.out.println("Wrong amount scanned, try again");
             return;
         }
+        addNextProduct(id,amount);
+    }
 
+
+    public void addNextProduct(Long id, BigInteger amount) {
         Optional<Product> optionalProduct = ProductManager.getInstance().search(id);
 
         optionalProduct.ifPresentOrElse(product -> {
-            if(ProductManager.getInstance().sellProduct(product, amount)){
-            updateAmount(product,amount);
-            BigDecimal cost = (product.getPrice().multiply(new BigDecimal(amount)));
-            toPay = toPay.add(cost);
-            }}
-            ,() -> System.out.println("Product not found : Product with this ID doesn't exist"));
-
+                    if(ProductManager.getInstance().isAvailable(product, amount)){
+                        updateAmount(product,amount);
+                        BigDecimal cost = (product.getPrice().multiply(new BigDecimal(amount)));
+                        toPay = toPay.add(cost);
+                    }}
+                ,() -> System.out.println("Product not found : Product with this ID doesn't exist"));
 
     }
 }
