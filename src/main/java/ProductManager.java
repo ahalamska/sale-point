@@ -25,7 +25,7 @@ public class ProductManager {
 
 
     public void addProduct(Product product) {
-        if(!Product.isBarCodeCorrect(product.getId().toString())) return;
+        if(isBarCodeIncorrect(product.getId().toString())) return;
         if(productMap.containsKey(product.getId())) {
             System.out.println("Already exists product with this id");
             return;
@@ -54,7 +54,13 @@ public class ProductManager {
         return Optional.ofNullable(productMap.get(id));
     }
 
-
+    public static boolean isBarCodeIncorrect(String id){
+        if(!id.matches("[0-9]{13}")){
+            System.out.println("Invalid bar-code: Required 13 digit with no white sign");
+            return true;
+        }
+        return false;
+    }
 
     public void enteringProduct(){
 

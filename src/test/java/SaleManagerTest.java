@@ -9,7 +9,6 @@ public class SaleManagerTest {
 
     public SaleManager saleManager = new SaleManager();
     public Product product1 = new Product("Book A", 2222222222222L, BigDecimal.TEN, BigInteger.TEN);
-    public Product IncorrectProduct2 = new Product("Book A", 2222222222L, BigDecimal.TEN, BigInteger.TEN);
     public Product product2 = new Product("Book C",9999999999990L , BigDecimal.TEN,
             BigInteger.TEN);
 

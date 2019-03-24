@@ -21,12 +21,6 @@ public class Product {
    //TODO create new AmountManager class and add there amount-counting functionality
    private BigInteger amount;
 
-   public static boolean isBarCodeCorrect(String id){
-      if(!id.matches("[0-9]{13}")){
-         System.out.println("Invalid bar-code: Required 13 digit with no white sign");
-         return false;
-      }
-      return true;
-   }
+
 
 }

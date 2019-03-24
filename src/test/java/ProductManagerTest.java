@@ -62,4 +62,19 @@ public class ProductManagerTest {
         assertTrue(productManager.search(product2.getId()).isPresent());
         assertFalse(productManager.search(1000000000000L).isPresent());
     }
+
+    @Test
+    public void LengthBarCodeTest(){
+        for(long i = 0L; i<1000000000000000000L ; i*=10 ){
+            if(i > 999999999999L && i < 10000000000000L){
+                assertFalse(ProductManager.isBarCodeIncorrect(Long.toString(i)));
+            }
+            else{
+                assertTrue(ProductManager.isBarCodeIncorrect(Long.toString(i)));
+            }
+        }
+    }
+
+
+
 }

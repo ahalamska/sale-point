@@ -1,18 +1,19 @@
+import lombok.Data;
+
 import java.math.BigDecimal;
 
-
+@Data
 public class Wallet {
 
-    private  static Wallet instance = null;
+    private  static Wallet instance;
 
     private BigDecimal amountCard = new BigDecimal(0);
 
     private BigDecimal soldToday = new BigDecimal(0);
 
 
-    public static  Wallet getInstance(){
-        if(instance == null)
-            return instance = new Wallet();
+    public static synchronized Wallet getInstance(){
+        if(instance == null) instance = new Wallet();
         return instance;
     }
 
@@ -27,7 +28,6 @@ public class Wallet {
 
     void sellByCard(BigDecimal toPay) {
         this.soldToday = this.soldToday.add(toPay);
-        System.out.println("Sold" + soldToday);
         this.amountCard = this.amountCard.add(toPay);
     }
 

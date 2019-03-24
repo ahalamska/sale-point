@@ -36,7 +36,7 @@ public class SaleManager {
     private void sellingLoop(){
         Scanner scanner = new Scanner(System.in);
         while(true){
-            System.out.println("More product ? (y/n) \n exit(e)");
+            System.out.println("Add next product ? (y/n) \n exit (e)");
             String answer;
             try {
                 answer = scanner.nextLine();
@@ -139,7 +139,7 @@ public class SaleManager {
             return;
         }
         Long id;
-        if(!Product.isBarCodeCorrect(stringId)) return;
+        if(ProductManager.isBarCodeIncorrect(stringId)) return;
         id = Long.parseLong(stringId);
 
 
