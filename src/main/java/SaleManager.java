@@ -69,7 +69,7 @@ public class SaleManager {
     private void endSelling() {
         Scanner scanner = new Scanner(System.in);
         while(true) {
-            System.out.println("To pay : " + toPay.toString() + "\n" + "Pay by Card (y/n)?\n exit (e) + \n");
+            System.out.println("To pay : " + toPay.toString() + " PLN" + "\n" + "Pay by Card (y/n)?\n exit (e) + \n");
             String answer;
             try {
                 answer = scanner.nextLine();
@@ -113,7 +113,7 @@ public class SaleManager {
             optionalProduct.ifPresent(product -> {
                 System.out.println(product.getName() + "     " +
                         entry.getValue().toString() + "szt. x" +
-                        product.getPrice().toString() + "\n");
+                        product.getPrice().toString() + "\n" + " PLN");
             });
         }
         System.out.println("-------------------------------\n"+
